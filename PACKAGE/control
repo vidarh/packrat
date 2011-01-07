@@ -1,0 +1,18 @@
+Name: Packrat
+Version: 0.1
+Author: Vidar Hokstad <vidar@hokstad.com>
+Requires:
+Recommends:
+AppDir: App
+BuildRequires: 
+Category: util/cli
+
+%%build
+cd src/
+make install
+
+%%files
+App
+!*.git
+!*~
+

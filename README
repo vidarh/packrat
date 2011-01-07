@@ -5,5 +5,5 @@ It's goal is to be simple, self-contained and to respect Amiga conventions
 whenever possible. It should also be easily portable, to take into account
 users and developers using UAE or developing on a non-Amiga machine.
 
-This archive is itself reading to be packaged up as a Packrat package,
+This archive is itself ready to be packaged up as a Packrat package,
 and demonstrates the structure and features of Packrat.
