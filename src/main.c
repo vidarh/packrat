@@ -11,6 +11,7 @@ void usage()
 		 "\n"
 		 "GLOBAL OPTIONS\n"
 		 "   -v, /v, verbose       Turn on debug output\n"
+		 "   -h, -?, ?, help       This help text\n"
 		 "\n"
 		 "COMMANDS\n"
 		 "   install [package]     Install the package\n"
@@ -28,8 +29,49 @@ void usage()
 		 "\n");
 }
 
-int main()
+int main(int argc, const char ** argv)
 {
-  usage();
+  const char * opt;
+  short verbose = 0;
+  ++argv; --argc;
+  while (argc > 0) {
+	if (!strcasecmp(*argv,"verbose")) verbose = 1;
+	else if (!strcasecmp(*argv,"help") || !strcmp(*argv,"?")) {
+	  usage();
+	  return 0;
+	} else if (*argv[0] == '/' || *argv[0] == '-') {
+	  opt = *argv;
+	  ++opt;
+	  while (*opt) {
+		switch (*opt) {
+		case 'h':
+		case '?':
+		  usage();
+		  return 0;
+		case 'v':
+		  verbose = 1;
+		  break;
+		default:
+		  fprintf(stderr,"Unknown global option: '%c'\n", *opt);
+		  return 1;
+		}
+		++opt;
+	  }
+	} else break;
+	++argv; --argc;
+  }
+
+  if (argc == 0) {
+	usage();
+	return 0;
+  }
+
+  if (!strcasecmp(*argv,"build")) {
+	return packrat_build("FIXME");
+  } else {
+	fprintf(stderr,"ERROR: Unknown / unimplemented command '%s'\n",*argv);
+	return 1;
+  }
+
   return 0;
 }

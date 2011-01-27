@@ -1,18 +1,22 @@
+#
+# This is a Packrat control file, determining how to package and build Packrat itself.
+#
 Name: Packrat
 Version: 0.1
 Author: Vidar Hokstad <vidar@hokstad.com>
-Requires:
-Recommends:
 AppDir: App
+Requires:
+	C:lha
+Recommends:
 BuildRequires: 
-Category: util/cli
+Provides:
+Files: App, !*.git, !*~
+# OR:
+#  App
+#  !*.git
+#  !*~
 
 %%build
 cd src/
-make install
-
-%%files
-App
-!*.git
-!*~
+make install    # Comments are retained in '%%' sections
 

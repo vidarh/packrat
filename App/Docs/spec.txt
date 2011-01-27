@@ -64,13 +64,17 @@ directory.
 The build process will first validate the PACKAGE directory, then check for any build requirements
 listed in PACKAGE/control. Finally it will copy the package to a temporary directory in T: (the build root),
 write PACKAGE/control's %%build section to T: and execute it as a script with the packages build root
-as the current directory. If successful, it will then use the file patterns in %%files to package up
-an lha archive. Packrat will by default exclude any Unix-style backup files (ending in "~") and files
-in ".cvs",".svn" and ".git" directories.
+as the current directory. 
 
 It will also generate a MANIFEST file that lists all the files in the archive with their md5sums,
 and an INSTALL file that contains English textual installation instructions and a description of 
 Packrat. Future improvements may include auto-creating an installer script.
+
+If successful, it will then use the file patterns in %%files to package up an lha archive using the
+"lha" program. Packrat will by default exclude any Unix-style backup files (ending in "~") and files
+in ".cvs",".svn" and ".git" directories.
+
+
 
 Installing packages
 -------------------
@@ -84,6 +88,7 @@ support for remote repositories.
 
 The installation proceeds as follows:
 
+ * Packrat uses "lha x" to unpack the archive in a temporary location.
  * Packrat sanity checks the package by checking the md5sums in the MANIFEST file.
  * Packrat then reads the control file and verifies whether or not the required and
    recommended packages are there. 
