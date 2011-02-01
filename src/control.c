@@ -25,13 +25,25 @@ static char * ltrim(char * pos) {
 static signed int packrat_parse_control_list(struct List * list, char * linebuf, short * lastcomma, short plist)
 {
   short len;
+  char * entry;
+
   if ((plist && strncmp(linebuf,"%%",2)) ||
 	  (isspace(linebuf[0]) || *lastcomma || linebuf[0] == 0 || linebuf[0] == '#')) {
 	rtrim_c(linebuf,plist);
 	len = strlen(linebuf);
 	*lastcomma =  len > 0 && linebuf[len-1]  == ',';
 	if (!plist) linebuf = ltrim(linebuf);
-	if (linebuf[0]) fprintf(stderr,"DEBUG: -> %s\n",linebuf);
+	
+	if (!plist) {
+	  entry = strtok(rtrim(ltrim(linebuf)),",");
+	  while(entry) {
+		entry = rtrim(ltrim(entry));
+		if (entry[0]) fprintf(stderr,"DEBUG: -> %s\n",entry);
+		entry = strtok(0,",");
+	  }
+	} else {
+	  if (linebuf[0]) fprintf(stderr,"DEBUG: -> %s\n",linebuf);
+	}
 	return 1;
   }
   return 0;
