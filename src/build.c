@@ -1,6 +1,8 @@
 
 #include "packrat.h"
 #include "control.h"
+#include "require.h"
+#include "debug.h"
 
 void packrat_build(const char * path)
 {
@@ -8,5 +10,10 @@ void packrat_build(const char * path)
   if (!ctrl) return;
 
   packrat_debug_control(ctrl);
+
+  if (packrat_find_object("c:lha", PACKRAT_CMP_NONE,0)) {
+	Log("Found c:lha");
+  }
+
   packrat_free_control(ctrl);
 }

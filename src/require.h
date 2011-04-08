@@ -4,9 +4,9 @@
 /**
  *   Dependency management functions 
  *
- *   packrat_find_object(object, versionstring)
+ *   packrat_find_object(object, cmpop, versionstring)
  *     Checks whether the specificed object (given as a file name or package name)
- *     exists, and matches the given version string.
+ *     exists, and matches the given version string and comparison.
  *
  *     If the object is a file, packrat employs the following methods to determine
  *     the version number:
@@ -41,5 +41,16 @@
  *   1.10 > 1.9 is _true_.
  */
 
+enum {
+  PACKRAT_CMP_LT,
+  PACKRAT_CMP_LE,
+  PACKRAT_CMP_EQ,
+  PACKRAT_CMP_NE,
+  PACKRAT_CMP_GT,
+  PACKRAT_CMP_GE,
+  PACKRAT_CMP_NONE
+};
+
+int packrat_find_object(const char * object, unsigned short cmpop, const char * version);
 
 #endif

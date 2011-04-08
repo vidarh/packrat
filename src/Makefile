@@ -1,11 +1,15 @@
 
-OBJS=main.o control.o build.o
+OBJS=main.o control.o build.o require.o
 
 APPDIR=../App
 MKDIR=mkdir
 CP=cp
 
 CFLAGS=-g
+
+ifdef DEBUG
+CFLAGS += -DDEBUG
+endif
 
 all: packrat
 

@@ -3,7 +3,4 @@
 
 #define VERSION "0.1"
 
-struct control {
-};
-
 #endif
