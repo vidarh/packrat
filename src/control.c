@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 static char * rtrim_c(char * pos, short keepcomment) {
   char * value = pos;
@@ -106,7 +107,7 @@ static signed int packrat_parse_control_headers(FILE * f,struct packrat_control 
 	  else if (!strcasecmp(name,"Provides")) inlist = &ctrl->provides;
 	  else if (!strcasecmp(name,"Recommends")) inlist = &ctrl->recommends;
 	  else {
-		fprintf(stderr,"Unknown header '%s'\n");
+		fprintf(stderr,"Unknown header '%s'\n",pos);
 		return 0;
 	  }
 
@@ -133,6 +134,7 @@ static signed int packrat_parse_control_headers(FILE * f,struct packrat_control 
   return 1;
 }
 
+#ifdef DEBUG
 void packrat_debug_control(struct packrat_control * ctrl)
 {
   fprintf(stderr,"Name: %s\n",ctrl->name);
@@ -140,14 +142,17 @@ void packrat_debug_control(struct packrat_control * ctrl)
   fprintf(stderr,"Author: %s\n",ctrl->author);
   fprintf(stderr,"AppDir: %s\n",ctrl->appdir);
 }
+#endif
 
-struct packrat_control * packrat_parse_control(const char * filename)
+/*@null@*/ struct packrat_control * packrat_parse_control(const char * filename)
 {
   struct packrat_control * ctrl;
   FILE * f = fopen(filename,"r");
   if (!f) return 0;
 
   ctrl = calloc(1,sizeof(struct packrat_control)); /* FIXME: Does AROS malloc use  RT? */
+  if (!ctrl) return 0;
+  
   if (ctrl) {
 	if (!packrat_parse_control_headers(f,ctrl)) {
 	  packrat_free_control(ctrl);

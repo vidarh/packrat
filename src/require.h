@@ -51,6 +51,10 @@ enum {
   PACKRAT_CMP_NONE
 };
 
-int packrat_find_object(const char * object, unsigned short cmpop, const char * version);
+struct packrat_object {
+};
+
+int packrat_find_file(const char * object, char * real_path, int path_size);
+struct packrat_object * packrat_find_object(const char * object, unsigned short cmpop, const char * version);
 
 #endif

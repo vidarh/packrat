@@ -3,4 +3,6 @@
 
 #define VERSION "0.1"
 
+#include "build.h"
+
 #endif

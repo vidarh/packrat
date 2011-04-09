@@ -31,4 +31,8 @@ struct packrat_control {
 struct packrat_control * packrat_parse_control(const char * filename);
 void packrat_free_control(struct packrat_control * c);
 
+#ifdef DEBUG
+void packrat_debug_control(struct packrat_control * ctrl);
+#endif
+
 #endif

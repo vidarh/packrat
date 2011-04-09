@@ -1,11 +1,12 @@
 #include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "debug.h"
 #include "require.h"
 
- #include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 static int file_exists(const char * object)
 {
@@ -20,7 +21,7 @@ static int file_exists(const char * object)
 }
 
 /* FIXME: Make sure not to trigger requesters on AmigaOS unnecessarily. */
-static int packrat_find_file(const char * object, char * real_path, int path_size)
+int packrat_find_file(const char * object, char * real_path, int path_size)
 {
   Log(object)
   if (file_exists(object)) {
@@ -33,7 +34,7 @@ static int packrat_find_file(const char * object, char * real_path, int path_siz
 	 C:lha will work
   */
   if (!strncasecmp("c:",object,2)) {
-	const char * path = getenv("PACKRAT_PATH");
+	char * path = getenv("PACKRAT_PATH");
 	if (!path) path = getenv("PATH");
 	if (path) {
 	  char * saveptr;
@@ -44,12 +45,12 @@ static int packrat_find_file(const char * object, char * real_path, int path_siz
 	  chk = strtok_r(path,":",&saveptr);
 	  do {
 		snprintf(real_path,path_size,"%s/%s",chk, object + 2);
-		if (file_exists(real_path)) {
+		if (file_exists(real_path) != 0) {
 		  Log(" FOUND!");
 		  free(path);
 		  return 1;
 		}
-	  } while (chk = strtok_r(0,":",&saveptr));
+	  } while ((chk = strtok_r(0,":",&saveptr)));
 	  free(path);
 	}
   } else if (!strncasecmp("libs:",object,5)) {
@@ -71,7 +72,7 @@ static int packrat_find_package(const char * object)
   return 0;
 }
 
-int packrat_find_object(const char * object, unsigned short cmpop, const char * version)
+struct packrat_object * packrat_find_object(const char * object, unsigned short cmpop, const char * version)
 {
   Log(object);
 
@@ -93,9 +94,14 @@ int packrat_find_object(const char * object, unsigned short cmpop, const char * 
    */
 
   char real_path[1024];
+  struct packrat_object * ob = 0;
   
   if (packrat_find_file(object, real_path,sizeof(real_path))) {
-	if (cmpop == PACKRAT_CMP_NONE) return 1;
+	Log("Found file");
+	if (cmpop == PACKRAT_CMP_NONE) {
+	  ob = malloc(sizeof(struct packrat_object *));
+	  return ob;
+	}
 	Log("Version check not yet implemented");
   } else if (packrat_find_package(object)) {
   } else {
@@ -103,6 +109,6 @@ int packrat_find_object(const char * object, unsigned short cmpop, const char * 
   }
 
   /* FIXME: Compare version */
-
   return 0;
 }
+

@@ -5,7 +5,7 @@ APPDIR=../App
 MKDIR=mkdir
 CP=cp
 
-CFLAGS=-g
+CFLAGS=-g -Wall
 
 ifdef DEBUG
 CFLAGS += -DDEBUG
