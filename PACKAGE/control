@@ -9,6 +9,8 @@ Requires:
 	C:lha
 Recommends:
 BuildRequires: 
+    C:cc
+    C:make
 Provides:
 Files: App, !*.git, !*~
 # OR:
