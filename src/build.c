@@ -23,6 +23,15 @@ int packrat_build(const char * path)
 	return 1;
   }
 
+  struct packrat_node * node;
+  FOREACH_ML(&(ctrl->buildrequires),node) {
+	/* FIXME: Version check */
+	if (!packrat_find_object(node->str,PACKRAT_CMP_NONE,0)) {
+	  fprintf(stderr,"FATAL: Package requires '%s' for build\n", node->str);
+	  return 1;
+	}
+  }
+
   packrat_free_control(ctrl);
   return 0;
 }

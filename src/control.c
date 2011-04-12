@@ -23,7 +23,7 @@ static char * ltrim(char * pos) {
   return pos;
 }
 
-static signed int packrat_parse_control_list(struct List * list, char * linebuf, short * lastcomma, short plist)
+static signed int packrat_parse_control_list(struct MinList * list, char * linebuf, short * lastcomma, short plist)
 {
   short len;
   char * entry;
@@ -39,11 +39,21 @@ static signed int packrat_parse_control_list(struct List * list, char * linebuf,
 	  entry = strtok(rtrim(ltrim(linebuf)),",");
 	  while(entry) {
 		entry = rtrim(ltrim(entry));
-		if (entry[0]) fprintf(stderr,"DEBUG: -> %s\n",entry);
+		if (entry[0]) {
+		  struct packrat_node * node = malloc(sizeof(struct packrat_node));
+		  node->str = strdup(entry);
+		  AddTail(list,node);
+		  fprintf(stderr,"DEBUG: -> %s\n",entry);
+		}
 		entry = strtok(0,",");
 	  }
 	} else {
-	  if (linebuf[0]) fprintf(stderr,"DEBUG: -> %s\n",linebuf);
+	  if (linebuf[0]) {
+		  struct packrat_node * node = malloc(sizeof(struct packrat_node));
+		  node->str = strdup(linebuf);
+		  AddTail(list,node);
+		  fprintf(stderr,"DEBUG: -> %s\n",linebuf);
+	  }
 	}
 	return 1;
   }
@@ -54,7 +64,7 @@ static signed int packrat_parse_control_headers(FILE * f,struct packrat_control 
 {
   char linebuf[1024];
   const char * name;
-  struct List * inlist = 0;
+  struct MinList * inlist = 0;
   short plist = 0;
   short lastcomma = 0;
 
@@ -137,10 +147,22 @@ static signed int packrat_parse_control_headers(FILE * f,struct packrat_control 
 #ifdef DEBUG
 void packrat_debug_control(struct packrat_control * ctrl)
 {
+  struct MinNode * node;
+
   fprintf(stderr,"Name: %s\n",ctrl->name);
   fprintf(stderr,"Version: %s\n",ctrl->version);
   fprintf(stderr,"Author: %s\n",ctrl->author);
   fprintf(stderr,"AppDir: %s\n",ctrl->appdir);
+
+  fprintf(stderr,"BuildRequires:\n");
+  FOREACH_ML(&(ctrl->buildrequires),node) {
+	fprintf(stderr,"    %s\n",((struct packrat_node *)node)->str);
+  }
+
+  fprintf(stderr,"Files:\n");
+  FOREACH_ML(&(ctrl->files),node) {
+	fprintf(stderr,"    %s\n",((struct packrat_node *)node)->str);
+  }
 }
 #endif
 
@@ -151,18 +173,22 @@ void packrat_debug_control(struct packrat_control * ctrl)
   if (!f) return 0;
 
   ctrl = calloc(1,sizeof(struct packrat_control)); /* FIXME: Does AROS malloc use  RT? */
-  if (!ctrl) return 0;
-  
   if (ctrl) {
+	NewList(&ctrl->requires);
+	NewList(&ctrl->recommends);
+	NewList(&ctrl->buildrequires);
+	NewList(&ctrl->files);
+	NewList(&ctrl->provides);
+	NewList(&ctrl->build);
+
 	if (!packrat_parse_control_headers(f,ctrl)) {
 	  packrat_free_control(ctrl);
 	  return 0;
 	}
+
+	/* Defaults */
+	if (!ctrl->appdir) ctrl->appdir = strdup("App");
   }
-
-  /* Defaults */
-  if (!ctrl->appdir) ctrl->appdir = strdup("App");
-
   fclose(f);
   return ctrl;
 }
