@@ -43,7 +43,6 @@ static signed int packrat_parse_control_list(struct MinList * list, char * lineb
 		  struct packrat_node * node = malloc(sizeof(struct packrat_node));
 		  node->str = strdup(entry);
 		  AddTail(list,node);
-		  fprintf(stderr,"DEBUG: -> %s\n",entry);
 		}
 		entry = strtok(0,",");
 	  }
@@ -52,7 +51,6 @@ static signed int packrat_parse_control_list(struct MinList * list, char * lineb
 		  struct packrat_node * node = malloc(sizeof(struct packrat_node));
 		  node->str = strdup(linebuf);
 		  AddTail(list,node);
-		  fprintf(stderr,"DEBUG: -> %s\n",linebuf);
 	  }
 	}
 	return 1;
@@ -99,7 +97,6 @@ static signed int packrat_parse_control_headers(FILE * f,struct packrat_control 
 	  return -1;
 	}
 	*pos = 0;
-	fprintf(stderr,"DEBUG: %s\n",name);
 	++pos;
 
 	pos = ltrim(pos);
@@ -161,6 +158,11 @@ void packrat_debug_control(struct packrat_control * ctrl)
 
   fprintf(stderr,"Files:\n");
   FOREACH_ML(&(ctrl->files),node) {
+	fprintf(stderr,"    %s\n",((struct packrat_node *)node)->str);
+  }
+
+  fprintf(stderr,"Build:\n");
+  FOREACH_ML(&(ctrl->build),node) {
 	fprintf(stderr,"    %s\n",((struct packrat_node *)node)->str);
   }
 }
