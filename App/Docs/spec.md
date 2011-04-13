@@ -68,7 +68,16 @@ as the current directory.
 
 It will also generate a MANIFEST file that lists all the files in the archive with their md5sums,
 and an INSTALL file that contains English textual installation instructions and a description of 
-Packrat. Future improvements may include auto-creating an installer script.
+Packrat.
+
+It is intended that packrat will generate an Amiga installer script that will
+check for Packrat and install the package with Packrat if present, and that will
+install the package if not.
+
+The installation process will create an uninstall script, and leave sufficient
+information in the install directory to allow a fresh reinstall of packrat to
+pick up the package details using *packrat scan*, or for users to run the uninstall
+script to clean up the system without using packrat.
 
 If successful, it will then use the file patterns in %%files to package up an lha archive using the
 "lha" program. Packrat will by default exclude any Unix-style backup files (ending in "~") and files
@@ -102,3 +111,14 @@ The installation proceeds as follows:
    conflicts, and if so give warnings/errors. It will also regardless take backups
    of overwritten files.
    
+
+Scanning the system
+-------------------
+
+Because Packrat is designed to act nicely with Amiga systems that are manually managed
+for the most part, *packrat scan* will allow packrat to scan the disks of an Amiga system
+and register information about Packrat packages that were manually installed (using the
+provided installer scripts) and allow them to be registered with the package database
+once packrat is installed. It will also attempt to discover and register packages that
+are available but not fully installed (e.g. just unpacked, or lha archives).
+
