@@ -20,5 +20,4 @@ Files: App, !*.git, !*~
 
 %%build
 cd src/
-make install    # Comments are retained in '%%' sections
-
+make DEST=$$BuildDir$$ install    # Comments are retained in '%%' sections
