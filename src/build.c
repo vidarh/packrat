@@ -23,6 +23,10 @@ int packrat_build(const char * path)
 	return 1;
   }
 
+  /* FIXME: Verify the PACKAGE directory */
+
+
+  /* Check the BuildRequires */
   struct packrat_node * node;
   FOREACH_ML(&(ctrl->buildrequires),node) {
 	/* FIXME: Version check */
@@ -32,6 +36,26 @@ int packrat_build(const char * path)
 	}
   }
 
+  /* Copy the %%build section to T: w/ debug echo's */
+  FOREACH_ML(&(ctrl->build),node) {
+	fprintf(stderr,"BUILD: %s\n",node->str);
+  }
+
+
+  /* Create a build root in T: */
+
+  /* Chdir to T: */
+
+  /* Execute the build script */
+
+  /* Create a MANIFEST with md5sums */
+
+  /* Create the INSTALL file */
+
+  /* Create an Amiga Installer and uninstall script */
+
+  /* Package up build root in an lha archive */
+  
   packrat_free_control(ctrl);
   return 0;
 }
