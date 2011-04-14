@@ -46,6 +46,12 @@ source or a pristine source archive. The source archive may also lack $$AppDir$$
 MANIFEST/INSTALL, the former must be created by the build code, the latter will
 be auto-generated.
 
+The "startup" file contains a script to be executed on boot. If ENV:SYS/Packages exists, this script will be
+put in $$AppDir$$/S and $$AppDir$$ in the script will be replaced with the empty string. Scripts should be
+written accordingly. If ENV:SYS/Packages does not exist, the user will be asked if they want the startup
+code to be put in S:Startup-Sequence, S:User-Startup, or if packrat should add ENV:SYS/Packages and according
+code in S:Startup-Sequence. ENV:SYS/Packages stems from AROS.
+
 To create a skeleton for a new package, you may use:
 
     packrat createpackage [path]
