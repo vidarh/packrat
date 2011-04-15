@@ -67,7 +67,7 @@ int main(int argc, const char ** argv)
   }
 
   if (!strcasecmp(*argv,"build")) {
-	return packrat_build("FIXME");
+	return packrat_build(argv[1]);
   } else {
 	fprintf(stderr,"ERROR: Unknown / unimplemented command '%s'\n",*argv);
 	return 1;
