@@ -23,3 +23,5 @@ packrat: $(OBJS) packrat.h control.h
 	-$(MKDIR) $(APPDIR) 2>/dev/null || true
 	$(CP) packrat $(APPDIR)
 
+install:
+	echo "NOT YET"
